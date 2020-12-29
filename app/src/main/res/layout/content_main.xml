@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_optimizationLevel="direct"
+        tools:layout_editor_absoluteX="-78dp">
+
+        <Button
+            android:id="@+id/loginBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loginBtn"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <Button
+            android:id="@+id/configBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/configBtn"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <Button
+            android:id="@+id/configPinpad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/configPinpad"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="120dp" />
+
+        <Button
+            android:id="@+id/iniciarDia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/iniciarDia"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="120dp" />
+
+        <Button
+            android:id="@+id/pagar100Btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pagar100"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="120dp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
