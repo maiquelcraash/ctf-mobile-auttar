@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-dontwarn com.csi.**
+-dontwarn br.com.auttar.**
+-dontwarn javax.swing.**
+-dontwarn java.beans.**
+-dontwarn org.slf4j.**
+-dontwarn org.apache.log4j.**
+-dontwarn org.slf4j.impl.**
+-dontwarn org.apache.commons.**
+-dontwarn br.com.auttar.ctfclient.tools.devices.touchkeyboard.**

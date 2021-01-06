@@ -17,6 +17,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            useProguard false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -36,7 +37,7 @@ dependencies {
     repositories {
         maven {
             name = "auttar"
-            url = "file://D:\\Dados\\User Files\\Downloads\\POC Auttar Android\\POC Auttar Android\\lib\\PaymentSDKAuttar-2.12.0"
+            url = "file://D:\\Dados\\User Files\\Downloads\\POC Auttar Android\\ctf-mobile-auttar\\lib\\PaymentSDKAuttar-2.12.0"
 //            url = "file://C:\\Users\\maiquel.ludwig\\Desktop\\WORK\\1- Projetos\\APP to PDV\\POC Auttar Android\\lib\\PaymentSDKAuttar-2.12.0"
         }
     }

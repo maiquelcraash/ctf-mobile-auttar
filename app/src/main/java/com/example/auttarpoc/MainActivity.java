@@ -18,6 +18,7 @@ import br.com.auttar.libctfclient.Constantes;
 import br.com.auttar.libctfclient.ui.CTFClientActivity;
 import br.com.auttar.mobile.libctfclient.sdk.AuttarConfiguration;
 import br.com.auttar.mobile.libctfclient.sdk.AuttarHost;
+import br.com.auttar.mobile.libctfclient.sdk.AuttarPermissionType;
 import br.com.auttar.mobile.libctfclient.sdk.AuttarSDK;
 import br.com.auttar.mobile.libctfclient.sdk.AuttarTerminal;
 import br.com.auttar.mobile.libctfclient.sdk.LibCTFClient;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
         AuttarSDK auttarSDK = new AuttarSDK(getApplicationContext());
         final AuttarConfiguration configuration = auttarSDK.getConfiguration();
+
+        configuration.setCancellationPermissionType(AuttarPermissionType.permited);
 
         final Intent loginIntent = auttarSDK.createDefaultLoginIntent();
 
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 LibCTFClient.IntentBuilder builder = LibCTFClient.IntentBuilder.from(Constantes.OperacaoCTFClient.INICIO_DIA);
                 LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
                 libCTFClient.setCustomViewCTFClient(CTFClientActivity.class);
-                libCTFClient.executeTransaction(builder, 999);
+                libCTFClient.executeTransaction(builder, Constantes.OperacaoCTFClient.INICIO_DIA);
             }
         });
 
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 LibCTFClient.IntentBuilder builder = LibCTFClient.IntentBuilder.from(Constantes.OperacaoCTFClient.CREDITO);
                 builder.setAmount(new BigDecimal(200));
                 builder.setInstallments(2);
-                builder.setAutomaticConfirmation(false);
+//                builder.setAutomaticConfirmation(false);
 
                 LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
                 libCTFClient.setCustomViewCTFClient(CTFClientActivity.class);
