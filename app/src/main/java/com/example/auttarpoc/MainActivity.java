@@ -14,6 +14,9 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 import br.com.auttar.libctfclient.Constantes;
 import br.com.auttar.libctfclient.ui.CTFClientActivity;
 import br.com.auttar.mobile.libctfclient.sdk.AuttarConfiguration;
@@ -30,9 +33,17 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        TefResult tefResult = LibCTFClient.createTefResult(data);
-        System.out.println(tefResult.getReturnCode());
-        System.out.println(data);
+        if(data != null){
+            TefResult tefResult = LibCTFClient.createTefResult(data);
+            System.out.println(tefResult.getReturnCode());
+            System.out.println(data);
+
+            // Faz alguma coisa antes de confirmar a transação
+
+            // Confirma a transação
+//            LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
+//            libCTFClient.finalizeTransaction(tefResult, true, Constantes.OperacaoCTFClient.CONFIRMACAO);
+        }
     }
 
     @Override
@@ -45,13 +56,15 @@ public class MainActivity extends AppCompatActivity {
 
         final Intent loginIntent = auttarSDK.createDefaultLoginIntent();
 
-//        AuttarTerminal auttarTerminal = new AuttarTerminal("19","302","001");
+//        DESCOMENTAR ABAIXO PARA USAR CTF STANDALONE
+//        AuttarTerminal auttarTerminal = new AuttarTerminal("01011","0710","001"); // PDV -> 300 (tem que ser 3 dígitos)
 //        AuttarHost auttarHost = new AuttarHost("10.8.4.218", 1996);
 //        List<AuttarHost> hostList = new ArrayList<>();
 //        hostList.add(auttarHost);
 //
 //        configuration.configureTerminal(auttarTerminal);
 //        configuration.configureHostCTF(hostList);
+
 
         final Intent configIntent = configuration.createDefaultIntent();
         final Intent pinpadIntent = configuration.createPinpadBluetoothIntent();
@@ -103,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 LibCTFClient.IntentBuilder builder = LibCTFClient.IntentBuilder.from(Constantes.OperacaoCTFClient.CREDITO);
-                builder.setAmount(new BigDecimal(200));
+                builder.setAmount(new BigDecimal(165));
                 builder.setInstallments(2);
 //                builder.setAutomaticConfirmation(false);
 
