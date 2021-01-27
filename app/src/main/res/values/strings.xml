@@ -11,7 +11,8 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="configBtn">Config</string>
     <string name="loginBtn">Login</string>
-    <string name="pagar100">Pagar</string>
+    <string name="pagar100">Pagar Com Crédito</string>
+    <string name="pagarPIX">Pagar Com QR CODE</string>
     <string name="configPinpad">Config Pinpad</string>
     <string name="iniciarDia">Iniciar DIA</string>
 </resources>

@@ -56,6 +56,14 @@
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="120dp" />
 
+        <Button
+            android:id="@+id/pagarQRCODE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pagarPIX"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="120dp" />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -42,6 +42,6 @@ dependencies {
         }
     }
 //    implementation "br.com.auttar.mobile:payment-sdk-ctffastRelease:2.12.0"
-//    implementation "br.com.auttar.mobile:payment-sdk-standaloneRelease:2.12.0"
+    implementation "br.com.auttar.mobile:payment-sdk-standaloneRelease:2.12.0"
     implementation "br.com.auttar.mobile:payment-sdk-homologRelease:2.12.0"
 }

@@ -1,6 +1,5 @@
 package com.example.auttarpoc;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -26,7 +25,6 @@ import br.com.auttar.mobile.libctfclient.sdk.AuttarSDK;
 import br.com.auttar.mobile.libctfclient.sdk.AuttarTerminal;
 import br.com.auttar.mobile.libctfclient.sdk.LibCTFClient;
 import br.com.auttar.mobile.libctfclient.sdk.TefResult;
-import br.com.auttar.mobile.libctfclient.sdk.Constants;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,13 +55,14 @@ public class MainActivity extends AppCompatActivity {
         final Intent loginIntent = auttarSDK.createDefaultLoginIntent();
 
 //        DESCOMENTAR ABAIXO PARA USAR CTF STANDALONE
-//        AuttarTerminal auttarTerminal = new AuttarTerminal("01011","0710","001"); // PDV -> 300 (tem que ser 3 dígitos)
-//        AuttarHost auttarHost = new AuttarHost("10.8.4.218", 1996);
-//        List<AuttarHost> hostList = new ArrayList<>();
-//        hostList.add(auttarHost);
-//
-//        configuration.configureTerminal(auttarTerminal);
-//        configuration.configureHostCTF(hostList);
+
+        AuttarTerminal auttarTerminal = new AuttarTerminal("01011","0710","001"); // PDV -> 300 (tem que ser 3 dígitos)
+        AuttarHost auttarHost = new AuttarHost("10.8.4.218", 1996);
+        List<AuttarHost> hostList = new ArrayList<>();
+        hostList.add(auttarHost);
+
+        configuration.configureTerminal(auttarTerminal);
+        configuration.configureHostCTF(hostList);
 
 
         final Intent configIntent = configuration.createDefaultIntent();
@@ -123,6 +122,22 @@ public class MainActivity extends AppCompatActivity {
                 LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
                 libCTFClient.setCustomViewCTFClient(CTFClientActivity.class);
                 libCTFClient.executeTransaction(builder, Constantes.OperacaoCTFClient.CREDITO);
+            }
+        });
+
+        Button pagarQRCBtn = findViewById(R.id.pagarQRCODE);
+        pagarQRCBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                LibCTFClient.IntentBuilder builder = LibCTFClient.IntentBuilder.from(Constantes.OperacaoCTFClient.QRCODE_GENERICO);
+                builder.setAmount(new BigDecimal(165));
+                builder.setInstallments(2);
+//                builder.setAutomaticConfirmation(false);
+
+                LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
+                libCTFClient.setCustomViewCTFClient(CTFClientActivity.class);
+                libCTFClient.executeTransaction(builder, Constantes.OperacaoCTFClient.QRCODE_GENERICO);
             }
         });
     }
