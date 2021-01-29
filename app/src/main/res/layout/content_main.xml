@@ -4,17 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="horizontal"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="160dp"
+        android:layout_height="448dp"
+        android:layout_marginStart="500dp"
+        android:background="#C5C5C5"
         android:gravity="center"
         android:orientation="vertical"
+        android:padding="10px"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayoutCompat"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_optimizationLevel="direct"
-        tools:layout_editor_absoluteX="-78dp">
+        app:layout_constraintVertical_bias="0.582"
+        app:layout_optimizationLevel="direct">
 
         <Button
             android:id="@+id/loginBtn"
@@ -48,21 +54,111 @@
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="120dp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="20px">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/autoConfirm"
+                tools:text="@string/autoConfirm" />
+
+            <ToggleButton
+                android:id="@+id/autoConfToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ToggleButton" />
+        </LinearLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat"
+        android:layout_width="163dp"
+        android:layout_height="359dp"
+        android:layout_marginStart="10dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.581"
+        app:layout_optimizationLevel="direct">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/valor"
+            tools:text="@string/valor" />
+
+        <EditText
+            android:id="@+id/valueInput"
+            android:layout_width="115dp"
+            android:layout_height="43dp"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            tools:text="170.00" />
+
         <Button
-            android:id="@+id/pagar100Btn"
+            android:id="@+id/pagarCC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/pagar100"
+            android:text="@string/pagarCC"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="120dp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/parcelas"
+            tools:text="@string/parcelas" />
+
+        <EditText
+            android:id="@+id/parcelasInput"
+            android:layout_width="138dp"
+            android:layout_height="42dp"
+            android:ems="10"
+            android:inputType="number"
+            tools:text="6" />
+
+        <Button
+            android:id="@+id/pagarCCPrazo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pagarCCPrazo"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="120dp" />
 
         <Button
-            android:id="@+id/pagarQRCODE"
+            android:id="@+id/pagarCD"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/pagarPIX"
+            android:text="@string/pagarCD"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="120dp" />
+
+        <EditText
+            android:id="@+id/transactionIDInput"
+            android:layout_width="138dp"
+            android:layout_height="42dp"
+            android:ems="10"
+            android:inputType="number"
+            tools:text="TransactionID" />
+
+        <Button
+            android:id="@+id/confTransBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confTransa"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

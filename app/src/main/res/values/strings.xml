@@ -11,8 +11,13 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="configBtn">Config</string>
     <string name="loginBtn">Login</string>
-    <string name="pagar100">Pagar Com Crédito</string>
-    <string name="pagarPIX">Pagar Com QR CODE</string>
+    <string name="confTransa">Conf. Trans.</string>
+    <string name="pagarCC">Crédito a Vista</string>
+    <string name="pagarCCPrazo">Crédito a Prazo</string>
+    <string name="pagarCD">Débito</string>
     <string name="configPinpad">Config Pinpad</string>
     <string name="iniciarDia">Iniciar DIA</string>
+    <string name="autoConfirm">Autoconfirmação</string>
+    <string name="valor">valor</string>
+    <string name="parcelas">parcelas</string>
 </resources>
