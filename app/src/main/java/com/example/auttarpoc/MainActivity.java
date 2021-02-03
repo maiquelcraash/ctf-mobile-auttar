@@ -83,9 +83,9 @@ public class MainActivity extends AppCompatActivity {
 //                        String errorCode = tefResult.getErrorCode();
 //                        String responseCode = tefResult.getResponseCode();
 //                        String terminal = tefResult.getTerminal();
-//                        String[] abbreviateCupom = tefResult.getAbbreviatedReceipt();
-//                        String[] customerCupom = tefResult.getCustomerSalesReceipt();
-//                        String[] storeCupom = tefResult.getStoreSalesReceipt();
+                        String[] abbreviateCupom = tefResult.getAbbreviatedReceipt();
+                        String[] customerCupom = tefResult.getCustomerSalesReceipt();
+                        String[] storeCupom = tefResult.getStoreSalesReceipt();
 
                         alertDialog.setMessage(tefResult.getDisplay()[0] +
                                 "\nNSU: " + NSUCTF);
@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 LibCTFClient.IntentBuilder builder = LibCTFClient.IntentBuilder.from(Constantes.OperacaoCTFClient.CREDITO);
-                builder.setAmount(new BigDecimal(Integer.parseInt(valueInput.getText().toString())));
+                builder.setAmount(new BigDecimal(Double.parseDouble(valueInput.getText().toString())));
                 builder.setAutomaticConfirmation(autoConf);
                 builder.setInstallments(1);
 
@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 LibCTFClient.IntentBuilder builder = LibCTFClient.IntentBuilder.from(Constantes.OperacaoCTFClient.CREDITO_LOJISTA);
-                builder.setAmount(new BigDecimal(Integer.parseInt(valueInput.getText().toString())));
+                builder.setAmount(new BigDecimal(Double.parseDouble(valueInput.getText().toString())));
                 builder.setInstallments(Integer.parseInt(installmentsInput.getText().toString()));
                 builder.setAutomaticConfirmation(autoConf);
 
@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 LibCTFClient.IntentBuilder builder = LibCTFClient.IntentBuilder.from(Constantes.OperacaoCTFClient.DEBITO);
-                builder.setAmount(new BigDecimal(Integer.parseInt(valueInput.getText().toString())));
+                builder.setAmount(new BigDecimal(Double.parseDouble(valueInput.getText().toString())));
                 builder.setInstallments(1);
                 builder.setAutomaticConfirmation(autoConf);
 
@@ -259,6 +259,27 @@ public class MainActivity extends AppCompatActivity {
                 libCTFClient.executeTransaction(builder, Constantes.OperacaoCTFClient.DEBITO);
             }
         });
+
+        // Banricompras em + de 1X Crédito
+        Button pagarCDPrazoBtn = findViewById(R.id.pagarCDPrazo);
+        pagarCDPrazoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                LibCTFClient.IntentBuilder builder = LibCTFClient.IntentBuilder.from(Constantes.OperacaoCTFClient.CDC_SEM_PARCELAS_AVISTA);
+                builder.setAmount(new BigDecimal(Double.parseDouble(valueInput.getText().toString())));
+//                builder.setInstallments(Integer.parseInt(installmentsInput.getText().toString()));
+                builder.setAutomaticConfirmation(autoConf);
+
+                LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
+                libCTFClient.setCustomViewCTFClient(CTFClientActivity.class);
+                libCTFClient.executeTransaction(builder, Constantes.OperacaoCTFClient.DEBITO_PREDATADO);
+
+            }
+        });
+
+        // Banricompras em 1X
+        // libCTFClient.executeTransaction(builder, Constantes.OperacaoCTFClient.DEBITO_PREDATADO);
     }
 
     @Override

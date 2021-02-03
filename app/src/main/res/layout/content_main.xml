@@ -144,6 +144,14 @@
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="120dp" />
 
+        <Button
+            android:id="@+id/pagarCDPrazo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pagarCDPrazo"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="120dp" />
+
         <EditText
             android:id="@+id/transactionIDInput"
             android:layout_width="138dp"
