@@ -58,9 +58,11 @@ public class MainActivity extends AppCompatActivity {
                 //Aprovado
                 if (returnCode == 0) {
                     int NSUCTF = 0;
+                    int installments = 1;
 
                     try {
                         NSUCTF = tefResult.getNsuCTF();
+                        installments = tefResult.getInstallments();
                     } catch (Exception e) {
                     }
 
@@ -69,20 +71,19 @@ public class MainActivity extends AppCompatActivity {
                         transaction.put(requestCode, tefResult);
                         transactions.put(NSUCTF, transaction);
 
-//                        String Adquirente = tefResult.getAcquirer();
-//                        String AditionalData = tefResult.getAdditionalData();
-//                        BigDecimal amount = tefResult.getAmount();
-//                        int installments = tefResult.getInstallments();
-//                        String approvalCode = tefResult.getApprovalCode();
-//                        String authorizedCode = tefResult.getAuthorizerCode();
-//                        String authorizer = tefResult.getAuthorizerName();
-//                        String authorizationCode = tefResult.getAuttarAuthorizationCode();
-//                        Long authorizerNSU = tefResult.getAuthorizerNsu();
-//                        String brand = tefResult.getBrand();
-//                        String cardNumber = tefResult.getCardNumber();
-//                        String errorCode = tefResult.getErrorCode();
-//                        String responseCode = tefResult.getResponseCode();
-//                        String terminal = tefResult.getTerminal();
+                        String Adquirente = tefResult.getAcquirer();
+                        String AditionalData = tefResult.getAdditionalData();
+                        BigDecimal amount = tefResult.getAmount();
+                        String approvalCode = tefResult.getApprovalCode();
+                        String authorizedCode = tefResult.getAuthorizerCode();
+                        String authorizer = tefResult.getAuthorizerName();
+                        String authorizationCode = tefResult.getAuttarAuthorizationCode();
+                        Long authorizerNSU = tefResult.getAuthorizerNsu();
+                        String brand = tefResult.getBrand();
+                        String cardNumber = tefResult.getCardNumber();
+                        String errorCode = tefResult.getErrorCode();
+                        String responseCode = tefResult.getResponseCode();
+                        String terminal = tefResult.getTerminal();
                         String[] abbreviateCupom = tefResult.getAbbreviatedReceipt();
                         String[] customerCupom = tefResult.getCustomerSalesReceipt();
                         String[] storeCupom = tefResult.getStoreSalesReceipt();
