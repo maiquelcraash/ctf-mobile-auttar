@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 29
     buildToolsVersion "30.0.0"
 
     defaultConfig {
         applicationId "com.example.auttarpoc"
         minSdkVersion 28
-        targetSdkVersion 30
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -42,6 +42,8 @@ dependencies {
         }
     }
 //    implementation "br.com.auttar.mobile:payment-sdk-ctffastRelease:2.12.0"
-    implementation "br.com.auttar.mobile:payment-sdk-standaloneRelease:2.12.0"
-//    implementation "br.com.auttar.mobile:payment-sdk-homologRelease:2.12.0"
+//    implementation "br.com.auttar.mobile:payment-sdk-standaloneRelease:2.12.0"
+    implementation "br.com.auttar.mobile:payment-sdk-homologRelease:2.12.0"
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.1'
+    implementation 'com.fasterxml.jackson.module:jackson-module-paranamer:2.12.1'
 }

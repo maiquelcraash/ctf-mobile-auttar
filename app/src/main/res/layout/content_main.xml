@@ -79,8 +79,8 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat"
-        android:layout_width="163dp"
-        android:layout_height="359dp"
+        android:layout_width="165dp"
+        android:layout_height="521dp"
         android:layout_marginStart="10dp"
         android:gravity="center"
         android:orientation="vertical"
@@ -167,6 +167,14 @@
             android:text="@string/confTransa"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp" />
+
+        <Button
+            android:id="@+id/searchTrans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buscar"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="120dp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
