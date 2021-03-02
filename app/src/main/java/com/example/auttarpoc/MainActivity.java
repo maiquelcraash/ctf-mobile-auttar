@@ -1,16 +1,17 @@
 package com.example.auttarpoc;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Parcel;
-import android.os.Parcelable;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
@@ -19,29 +20,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ToggleButton;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.databind.AnnotationIntrospector;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.cfg.SerializerFactoryConfig;
-import com.fasterxml.jackson.databind.ser.BasicSerializerFactory;
-import com.fasterxml.jackson.databind.ser.SerializerFactory;
-import com.fasterxml.jackson.databind.ser.Serializers;
-import com.fasterxml.jackson.module.paranamer.ParanamerModule;
-import com.fasterxml.jackson.module.paranamer.ParanamerOnJacksonAnnotationIntrospector;
+import org.apache.commons.io.IOUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import br.com.auttar.libctfclient.Constantes;
 import br.com.auttar.libctfclient.ui.CTFClientActivity;
@@ -60,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
     Boolean autoConf = false;
     HashMap transactions = new HashMap<Integer, HashMap<Integer, TefResult>>();
 
+    AuttarSDK auttarSDK;
+    AuttarConfiguration configuration;
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
@@ -70,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
+
+        String pinpad = configuration.getPinpadBluetooth();
+        String prompt = configuration.getPromptPinpad();
 
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -96,24 +88,9 @@ public class MainActivity extends AppCompatActivity {
 
                     if (NSUCTF > 0) {
 
-                        //Tentativa de serialização (MAL SUCEDIDA)
-                        ObjectMapper mapper = new ObjectMapper();
-
-                        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
-                        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-                        mapper.setVisibility(PropertyAccessor.CREATOR, JsonAutoDetect.Visibility.ANY);
-
-//                        mapper.registerModule(new ParanamerModule());
-//
-//                        mapper.setAnnotationIntrospector(new ParanamerOnJacksonAnnotationIntrospector());
-
-
                         try {
-//
-                            String ba = mapper.writeValueAsString(bundle);
-                            Bundle newbundle = mapper.readValue(ba, Bundle.class);
-
-                            Set keyset = bundle.keySet();
+                            saveToPreferences(bundle, NSUCTF);
+                            Bundle newbundle = restoreFromPreferences(NSUCTF);
 
                             Intent i = new Intent();
                             i.putExtras(newbundle);
@@ -128,10 +105,9 @@ public class MainActivity extends AppCompatActivity {
                             transaction2.put(requestCode, tefResultRestored);
                             transactions.put(NSUCTF+100, transaction2);
 
-                        } catch (JsonProcessingException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
-
 
                         String Adquirente = tefResult.getAcquirer();
                         String AditionalData = tefResult.getAdditionalData();
@@ -183,22 +159,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
 
-        final AuttarSDK auttarSDK = new AuttarSDK(getApplicationContext());
-        final AuttarConfiguration configuration = auttarSDK.getConfiguration();
+        auttarSDK = new AuttarSDK(getApplicationContext());
+        configuration = auttarSDK.getConfiguration();
 
         configuration.setCancellationPermissionType(AuttarPermissionType.permited);
 
         final Intent loginIntent = auttarSDK.createDefaultLoginIntent();
 
-//        DESCOMENTAR ABAIXO PARA USAR CTF STANDALONE
-//
-//        AuttarTerminal auttarTerminal = new AuttarTerminal("01011", "0302", "005"); // PDV -> 300 (tem que ser 3 dígitos)
-//        AuttarHost auttarHost = new AuttarHost("10.8.4.218", 1996);
-//        List<AuttarHost> hostList = new ArrayList<>();
-//        hostList.add(auttarHost);
-//
-//        configuration.configureTerminal(auttarTerminal);
-//        configuration.configureHostCTF(hostList);
+        AuttarTerminal auttarTerminal = new AuttarTerminal("01011", "0302", "005"); // PDV -> 300 (tem que ser 3 dígitos) "01011", "0302", "005"
+        AuttarHost auttarHost = new AuttarHost("10.8.4.218", 1996); //"10.8.4.218", 1996
+        List<AuttarHost> hostList = new ArrayList<>();
+        hostList.add(auttarHost);
+
+        // DESCOMENTAR ABAIXO PARA USAR CTF STANDALONE
+        configuration.configureTerminal(auttarTerminal);
+        configuration.configureHostCTF(hostList);
 
 
         final Intent configIntent = configuration.createDefaultIntent();
@@ -261,25 +236,14 @@ public class MainActivity extends AppCompatActivity {
                 int requestCode = (Integer) transaction.keySet().toArray()[0];
                 TefResult tefResult = (TefResult) transaction.get(transaction.keySet().toArray()[0]);
 
-
                 LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
                 libCTFClient.finalizeTransaction(tefResult, true, requestCode);
+
+//                IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.CONFIRMACAO);
 
 //                libCTFClient.executeTransaction(IntentBuilder.from(6).setTransactionID(tefResult.getTransactionID()).setTransactionNumber(tefResult.getTransactionNumber()).setIdentifierMultiEC(tefResult.getIdentifierMultiEC()), requestCode);
             }
         });
-
-//        public void finalizeTransaction (TefResult var1,boolean var2, int var3){
-//            byte var4;
-//            if (var2) {
-//                var4 = 6;  //confirmacao
-//            } else {
-//                var4 = 7;  //desfazimento
-//            }
-//
-//            lib.executeTransaction(IntentBuilder.from(var4).setTransactionID(var1.getTransactionID()).setTransactionNumber(var1.getTransactionNumber()).setIdentifierMultiEC(var1.getIdentifierMultiEC()), var3);
-//        }
-
         Button iniciarDia = findViewById(R.id.iniciarDia);
         iniciarDia.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -402,5 +366,48 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void saveToPreferences(Bundle in, int NSU) {
+        Parcel parcel = Parcel.obtain();
+        String serialized = null;
+        try {
+            in.writeToParcel(parcel, 0);
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            IOUtils.write(parcel.marshall(), bos);
+
+            serialized = Base64.encodeToString(bos.toByteArray(), 0);
+            System.out.println(serialized);
+        } catch (IOException e) {
+            Log.e(getClass().getSimpleName(), e.toString(), e);
+        } finally {
+            parcel.recycle();
+        }
+        if (serialized != null) {
+            SharedPreferences settings = getSharedPreferences(NSU + "", 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("parcel", serialized);
+            editor.commit();
+        }
+    }
+
+    private Bundle restoreFromPreferences(int NSU) {
+        Bundle bundle = null;
+        SharedPreferences settings = getSharedPreferences(NSU + "", 0);
+        String serialized = settings.getString("parcel", null);
+
+        if (serialized != null) {
+            Parcel parcel = Parcel.obtain();
+            try {
+                byte[] data = Base64.decode(serialized, 0);
+                parcel.unmarshall(data, 0, data.length);
+                parcel.setDataPosition(0);
+                bundle = parcel.readBundle();
+            } finally {
+                parcel.recycle();
+            }
+        }
+        return bundle;
     }
 }
