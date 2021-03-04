@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.com.auttar.libctfclient.Constantes;
 import br.com.auttar.libctfclient.ui.CTFClientActivity;
@@ -44,7 +45,6 @@ import static br.com.auttar.mobile.libctfclient.sdk.LibCTFClient.*;
 public class MainActivity extends AppCompatActivity {
 
     Boolean autoConf = false;
-    HashMap transactions = new HashMap<Integer, HashMap<Integer, TefResult>>();
 
     AuttarSDK auttarSDK;
     AuttarConfiguration configuration;
@@ -90,20 +90,6 @@ public class MainActivity extends AppCompatActivity {
 
                         try {
                             saveToPreferences(bundle, NSUCTF);
-                            Bundle newbundle = restoreFromPreferences(NSUCTF);
-
-                            Intent i = new Intent();
-                            i.putExtras(newbundle);
-
-                            TefResult tefResultRestored = createTefResult(i);
-
-                            HashMap transaction = new HashMap<Integer, TefResult>();
-                            transaction.put(requestCode, tefResult);
-                            transactions.put(NSUCTF, transaction);
-
-                            HashMap transaction2 = new HashMap<Integer, TefResult>();
-                            transaction2.put(requestCode, tefResultRestored);
-                            transactions.put(NSUCTF+100, transaction2);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -146,7 +132,8 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         alertDialog.setMessage(tefResult.getDisplay()[0]);
                         alertDialog.show();
-                    }catch (Exception e){}
+                    } catch (Exception e) {
+                    }
 
                 }
             }
@@ -166,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Intent loginIntent = auttarSDK.createDefaultLoginIntent();
 
-        AuttarTerminal auttarTerminal = new AuttarTerminal("01011", "0302", "005"); // PDV -> 300 (tem que ser 3 dígitos) "01011", "0302", "005"
+        AuttarTerminal auttarTerminal = new AuttarTerminal("01011", "0710", "005"); // PDV -> 300 (tem que ser 3 dígitos) "01011", "0302", "005"
         AuttarHost auttarHost = new AuttarHost("10.8.4.218", 1996); //"10.8.4.218", 1996
         List<AuttarHost> hostList = new ArrayList<>();
         hostList.add(auttarHost);
@@ -232,14 +219,15 @@ public class MainActivity extends AppCompatActivity {
                 // Confirma a transação
                 int NSU = Integer.parseInt(transactionIDInput.getText().toString());
 
-                HashMap transaction = (HashMap) transactions.get(NSU);
-                int requestCode = (Integer) transaction.keySet().toArray()[0];
-                TefResult tefResult = (TefResult) transaction.get(transaction.keySet().toArray()[0]);
+                Bundle restoredBunde = restoreFromPreferences(NSU);
+                Intent i = new Intent();
+                i.putExtras(restoredBunde);
+
+                TefResult tefResultRestored = createTefResult(i);
 
                 LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
-                libCTFClient.finalizeTransaction(tefResult, true, requestCode);
+                libCTFClient.finalizeTransaction(tefResultRestored, true, 112);
 
-//                IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.CONFIRMACAO);
 
 //                libCTFClient.executeTransaction(IntentBuilder.from(6).setTransactionID(tefResult.getTransactionID()).setTransactionNumber(tefResult.getTransactionNumber()).setIdentifierMultiEC(tefResult.getIdentifierMultiEC()), requestCode);
             }
@@ -249,10 +237,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.INICIO_DIA);
+                IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.CARGA_TABELA);
                 LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
                 libCTFClient.setCustomViewCTFClient(CTFClientActivity.class);
-                libCTFClient.executeTransaction(builder, Constantes.OperacaoCTFClient.INICIO_DIA);
+                libCTFClient.executeTransaction(builder, Constantes.OperacaoCTFClient.CARGA_TABELA);
             }
         });
 
@@ -385,17 +373,24 @@ public class MainActivity extends AppCompatActivity {
             parcel.recycle();
         }
         if (serialized != null) {
-            SharedPreferences settings = getSharedPreferences(NSU + "", 0);
+            SharedPreferences settings = getSharedPreferences("TRANSACTIONS", 0);
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString("parcel", serialized);
+            editor.putString(NSU + "", serialized);
             editor.commit();
         }
     }
 
+    //    /data/user/0/com.example.auttarpoc/shared_prefs/TRANSACTIONS.xml
     private Bundle restoreFromPreferences(int NSU) {
         Bundle bundle = null;
-        SharedPreferences settings = getSharedPreferences(NSU + "", 0);
-        String serialized = settings.getString("parcel", null);
+        SharedPreferences settings = getSharedPreferences("TRANSACTIONS", 0);
+        String serialized = settings.getString(NSU + "", null);
+
+        //loga todas as transactions salvas
+        Map<String, ?> allEntries = settings.getAll();
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            Log.d("map values", entry.getKey());  // + ": " + entry.getValue().toString());
+        }
 
         if (serialized != null) {
             Parcel parcel = Parcel.obtain();
@@ -409,5 +404,12 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return bundle;
+    }
+
+    private void removeFromPreferences(int NSU) {
+        SharedPreferences settings = getSharedPreferences("TRANSACTIONS", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.remove(NSU + "");
+        editor.apply();
     }
 }
