@@ -14,7 +14,8 @@
     <string name="confTransa">Conf. Trans.</string>
     <string name="pagarCC">Crédito a Vista</string>
     <string name="pagarCCPrazo">Crédito a Prazo</string>
-    <string name="pagarCDPrazo">Banricompras</string>
+    <string name="pagarCDPrazo">Deb Pre Dat Banri</string>
+    <string name="pagarCCBanri">Cred Banri</string>
     <string name="pagarCD">Débito</string>
     <string name="configPinpad">Config Pinpad</string>
     <string name="iniciarDia">Iniciar DIA</string>

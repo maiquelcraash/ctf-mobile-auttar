@@ -150,7 +150,8 @@ public class MainActivity extends AppCompatActivity {
 
         final Intent loginIntent = auttarSDK.createDefaultLoginIntent();
 
-        AuttarTerminal auttarTerminal = new AuttarTerminal("01011", "0710", "005"); // PDV -> 300 (tem que ser 3 dígitos) "01011", "0302", "005"
+//        AuttarTerminal auttarTerminal = new AuttarTerminal("01011", "0710", "005"); // PDV -> 300 (tem que ser 3 dígitos) "01011", "0302", "005"
+        AuttarTerminal auttarTerminal = new AuttarTerminal("01011", "0846", "001"); // banricompras
         AuttarHost auttarHost = new AuttarHost("10.8.4.218", 1996); //"10.8.4.218", 1996
         List<AuttarHost> hostList = new ArrayList<>();
         hostList.add(auttarHost);
@@ -288,13 +289,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Banricompras em + de 1X Crédito
+        // Banricompras pré datado
         Button pagarCDPrazoBtn = findViewById(R.id.pagarCDPrazo);
         pagarCDPrazoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.CDC_SEM_PARCELAS_AVISTA);
+                IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.DEBITO_PREDATADO);
                 builder.setAmount(new BigDecimal(Double.parseDouble(valueInput.getText().toString())));
 //                builder.setInstallments(Integer.parseInt(installmentsInput.getText().toString()));
                 builder.setAutomaticConfirmation(autoConf);
@@ -302,6 +303,28 @@ public class MainActivity extends AppCompatActivity {
                 LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
                 libCTFClient.setCustomViewCTFClient(CTFClientActivity.class);
                 libCTFClient.executeTransaction(builder, Constantes.OperacaoCTFClient.DEBITO_PREDATADO);
+
+            }
+        });
+
+        // Banricompras cédito
+        Button pagarCCBanriBtn = findViewById(R.id.pagarCCBanri);
+        pagarCCBanriBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.CDC_SEM_PARCELAS_AVISTA);
+                builder.setAmount(new BigDecimal(Double.parseDouble(valueInput.getText().toString())));
+                builder.setInstallments(Integer.parseInt(installmentsInput.getText().toString()));
+                builder.setAutomaticConfirmation(autoConf);
+
+                builder.setCardTypedEnabled(true);
+//                builder.setCardNumber("6396649900071989");
+
+
+                LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
+                libCTFClient.setCustomViewCTFClient(CTFClientActivity.class);
+                libCTFClient.executeTransaction(builder, Constantes.OperacaoCTFClient.CDC_SEM_PARCELAS_AVISTA);
 
             }
         });
