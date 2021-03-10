@@ -70,10 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (tefResult != null) {
                 int returnCode = tefResult.getReturnCode();
-
-
                 Bundle bundle = tefResult.getIntent().getExtras();
-
 
                 //Aprovado
                 if (returnCode == 0) {
@@ -228,7 +225,6 @@ public class MainActivity extends AppCompatActivity {
                 LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
                 libCTFClient.finalizeTransaction(tefResultRestored, true, 112);
 
-
 //                libCTFClient.executeTransaction(IntentBuilder.from(6).setTransactionID(tefResult.getTransactionID()).setTransactionNumber(tefResult.getTransactionNumber()).setIdentifierMultiEC(tefResult.getIdentifierMultiEC()), requestCode);
             }
         });
@@ -237,10 +233,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.CARGA_TABELA);
+                IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.OP_TESTE_COMUNICACAO_5N);
                 LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
                 libCTFClient.setCustomViewCTFClient(CTFClientActivity.class);
-                libCTFClient.executeTransaction(builder, Constantes.OperacaoCTFClient.CARGA_TABELA);
+                libCTFClient.executeTransaction(builder, Constantes.OperacaoCTFClient.OP_TESTE_COMUNICACAO_5N);
             }
         });
 
