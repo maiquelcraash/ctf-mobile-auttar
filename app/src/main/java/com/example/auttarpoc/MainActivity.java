@@ -27,8 +27,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import br.com.auttar.libctfclient.Constantes;
 import br.com.auttar.libctfclient.ui.CTFClientActivity;
@@ -48,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
     AuttarSDK auttarSDK;
     AuttarConfiguration configuration;
-
+    Boolean splitTransaction = false;
+    Double splitValue = 0.0;
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
@@ -70,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
             if (tefResult != null) {
                 int returnCode = tefResult.getReturnCode();
-                Bundle bundle = tefResult.getIntent().getExtras();
 
                 //Aprovado
                 if (returnCode == 0) {
@@ -86,7 +88,8 @@ public class MainActivity extends AppCompatActivity {
                     if (NSUCTF > 0) {
 
                         try {
-                            saveToPreferences(bundle, NSUCTF);
+                            Transaction transaction = new Transaction(NSUCTF, requestCode, tefResult);
+                            saveTransaction(transaction);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -112,6 +115,21 @@ public class MainActivity extends AppCompatActivity {
                         alertDialog.setMessage(tefResult.getDisplay()[0] +
                                 "\nNSU: " + NSUCTF);
                         alertDialog.show();
+
+                        // Pagamento com 2 cartões
+                        if(splitTransaction) {
+                            splitTransaction = false;
+
+                            LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
+                            LibCTFClient.IntentBuilder builder = libCTFClient.nextTransaction(requestCode,  tefResult);
+
+                            builder.setAmount(new BigDecimal(splitValue));
+                            builder.setAutomaticConfirmation(autoConf);
+                            builder.setInstallments(1);
+
+                            libCTFClient.setCustomViewCTFClient(CTFClientActivity.class);
+                            libCTFClient.executeTransaction(builder, requestCode);
+                        }
                     }
                 }
                 // Negado no CTF
@@ -131,18 +149,13 @@ public class MainActivity extends AppCompatActivity {
                         alertDialog.show();
                     } catch (Exception e) {
                     }
-
                 }
             }
-
-
         }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         auttarSDK = new AuttarSDK(getApplicationContext());
         configuration = auttarSDK.getConfiguration();
 
@@ -150,8 +163,8 @@ public class MainActivity extends AppCompatActivity {
 
         final Intent loginIntent = auttarSDK.createDefaultLoginIntent();
 
-//        AuttarTerminal auttarTerminal = new AuttarTerminal("01011", "0710", "005"); // PDV -> 300 (tem que ser 3 dígitos) "01011", "0302", "005"
-        AuttarTerminal auttarTerminal = new AuttarTerminal("01011", "0846", "001"); // banricompras
+        AuttarTerminal auttarTerminal = new AuttarTerminal("01011", "0302", "401"); // PDV -> 300 (tem que ser 3 dígitos) "01011", "0302", "005"
+//        AuttarTerminal auttarTerminal = new AuttarTerminal("01011", "0846", "001"); // banricompras
         AuttarHost auttarHost = new AuttarHost("10.8.4.218", 1996); //"10.8.4.218", 1996
         List<AuttarHost> hostList = new ArrayList<>();
         hostList.add(auttarHost);
@@ -159,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
         // DESCOMENTAR ABAIXO PARA USAR CTF STANDALONE
         configuration.configureTerminal(auttarTerminal);
         configuration.configureHostCTF(hostList);
-
 
         final Intent configIntent = configuration.createDefaultIntent();
         final Intent pinpadIntent = configuration.createPinpadBluetoothIntent();
@@ -214,19 +226,17 @@ public class MainActivity extends AppCompatActivity {
         confTransBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                configuration.setPromptPinpad("Confirmando Transação");
+
                 // Confirma a transação
                 int NSU = Integer.parseInt(transactionIDInput.getText().toString());
 
-                Bundle restoredBunde = restoreFromPreferences(NSU);
-                Intent i = new Intent();
-                i.putExtras(restoredBunde);
+                configuration.setPromptPinpad("Confirmando Transação NSU " + NSU);
 
-                TefResult tefResultRestored = createTefResult(i);
+                Transaction transaction = loadTransaction(NSU);
 
                 LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
-                libCTFClient.finalizeTransaction(tefResultRestored, true, 112);
-
-//                libCTFClient.executeTransaction(IntentBuilder.from(6).setTransactionID(tefResult.getTransactionID()).setTransactionNumber(tefResult.getTransactionNumber()).setIdentifierMultiEC(tefResult.getIdentifierMultiEC()), requestCode);
+                libCTFClient.finalizeTransaction(transaction.getTefResult(), true, transaction.getRequestCode());
             }
         });
         Button iniciarDia = findViewById(R.id.iniciarDia);
@@ -246,8 +256,30 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                splitTransaction = false;
+
                 IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.CREDITO);
                 builder.setAmount(new BigDecimal(Double.parseDouble(valueInput.getText().toString())));
+                builder.setAutomaticConfirmation(autoConf);
+                builder.setInstallments(1);
+
+                LibCTFClient libCTFClient = new LibCTFClient(MainActivity.this);
+                libCTFClient.setCustomViewCTFClient(CTFClientActivity.class);
+                libCTFClient.executeTransaction(builder, Constantes.OperacaoCTFClient.CREDITO);
+            }
+        });
+        Button pagarCC2Btn = findViewById(R.id.pagarCC2);
+        pagarCC2Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                splitTransaction = true;
+
+                Double value = Double.parseDouble(valueInput.getText().toString());
+                splitValue = value / 2;
+                value = value - splitValue;
+
+                IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.CREDITO);
+                builder.setAmount(new BigDecimal(value));
                 builder.setAutomaticConfirmation(autoConf);
                 builder.setInstallments(1);
 
@@ -261,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
         pagarCCPrazo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                splitTransaction = false;
 
                 IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.CREDITO_LOJISTA);
                 builder.setAmount(new BigDecimal(Double.parseDouble(valueInput.getText().toString())));
@@ -277,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
         pagarCDBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                splitTransaction = false;
 
                 IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.DEBITO);
                 builder.setAmount(new BigDecimal(Double.parseDouble(valueInput.getText().toString())));
@@ -294,6 +328,7 @@ public class MainActivity extends AppCompatActivity {
         pagarCDPrazoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                splitTransaction = false;
 
                 IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.DEBITO_PREDATADO);
                 builder.setAmount(new BigDecimal(Double.parseDouble(valueInput.getText().toString())));
@@ -312,6 +347,7 @@ public class MainActivity extends AppCompatActivity {
         pagarCCBanriBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                splitTransaction = false;
 
                 IntentBuilder builder = IntentBuilder.from(Constantes.OperacaoCTFClient.CDC_SEM_PARCELAS_AVISTA);
                 builder.setAmount(new BigDecimal(Double.parseDouble(valueInput.getText().toString())));
@@ -336,6 +372,7 @@ public class MainActivity extends AppCompatActivity {
         searchTransactionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                splitTransaction = false;
 
                 int NSU = Integer.parseInt(transactionIDInput.getText().toString());
 
@@ -375,11 +412,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveToPreferences(Bundle in, int NSU) {
+    private void saveTransaction(Transaction transaction) {
+        Bundle bundle = transaction.getTefResult().getIntent().getExtras();
+
         Parcel parcel = Parcel.obtain();
         String serialized = null;
         try {
-            in.writeToParcel(parcel, 0);
+            bundle.writeToParcel(parcel, 0);
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             IOUtils.write(parcel.marshall(), bos);
@@ -394,16 +433,27 @@ public class MainActivity extends AppCompatActivity {
         if (serialized != null) {
             SharedPreferences settings = getSharedPreferences("TRANSACTIONS", 0);
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString(NSU + "", serialized);
+
+            Set<String> transactionSet = new HashSet<String>();
+            transactionSet.add(transaction.getRequestCode() + "");
+            transactionSet.add(serialized);
+
+//            editor.putString(transaction.getNSU() + "", serialized);
+            editor.putStringSet(transaction.getNSU() + "", transactionSet);
             editor.commit();
         }
     }
 
     //    /data/user/0/com.example.auttarpoc/shared_prefs/TRANSACTIONS.xml
-    private Bundle restoreFromPreferences(int NSU) {
-        Bundle bundle = null;
+    private Transaction loadTransaction(int NSU) {
+        Transaction transaction = null;
         SharedPreferences settings = getSharedPreferences("TRANSACTIONS", 0);
-        String serialized = settings.getString(NSU + "", null);
+
+        Set<String> transactionSet = settings.getStringSet(NSU + "", null);
+
+        String requestCodeStr = (String) transactionSet.toArray()[0];
+        String serialized = (String) transactionSet.toArray()[1];
+        int requestCode = Integer.parseInt(requestCodeStr);
 
         //loga todas as transactions salvas
         Map<String, ?> allEntries = settings.getAll();
@@ -417,12 +467,20 @@ public class MainActivity extends AppCompatActivity {
                 byte[] data = Base64.decode(serialized, 0);
                 parcel.unmarshall(data, 0, data.length);
                 parcel.setDataPosition(0);
-                bundle = parcel.readBundle();
+                Bundle bundle = parcel.readBundle();
+
+                Intent i = new Intent();
+                i.putExtras(bundle);
+
+                TefResult tefResult = createTefResult(i);
+
+                transaction = new Transaction(NSU, requestCode, tefResult);
+
             } finally {
                 parcel.recycle();
             }
         }
-        return bundle;
+        return transaction;
     }
 
     private void removeFromPreferences(int NSU) {

@@ -13,6 +13,7 @@
     <string name="loginBtn">Login</string>
     <string name="confTransa">Conf. Trans.</string>
     <string name="pagarCC">Crédito a Vista</string>
+    <string name="pagarCC2">A vista 2 CCs</string>
     <string name="pagarCCPrazo">Crédito a Prazo</string>
     <string name="pagarCDPrazo">Deb Pre Dat Banri</string>
     <string name="pagarCCBanri">Cred Banri</string>

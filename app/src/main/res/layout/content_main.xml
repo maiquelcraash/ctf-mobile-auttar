@@ -80,7 +80,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat"
         android:layout_width="165dp"
-        android:layout_height="521dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:gravity="center"
         android:orientation="vertical"
@@ -110,6 +110,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/pagarCC"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="120dp" />
+
+        <Button
+            android:id="@+id/pagarCC2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pagarCC2"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="120dp" />
 
