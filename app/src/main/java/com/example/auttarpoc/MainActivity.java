@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             TefResult tefResult = createTefResult(data);
 
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
         AuttarTerminal auttarTerminal = new AuttarTerminal("01011", "0302", "401"); // PDV -> 300 (tem que ser 3 dígitos) "01011", "0302", "005"
 //        AuttarTerminal auttarTerminal = new AuttarTerminal("01011", "0846", "001"); // banricompras
-        AuttarHost auttarHost = new AuttarHost("10.8.4.218", 1996); //"10.8.4.218", 1996
+        AuttarHost auttarHost = new AuttarHost("10.8.4.217", 1996); //"10.8.4.218", 1996
         List<AuttarHost> hostList = new ArrayList<>();
         hostList.add(auttarHost);
 
@@ -226,12 +227,9 @@ public class MainActivity extends AppCompatActivity {
         confTransBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                configuration.setPromptPinpad("Confirmando Transação");
 
                 // Confirma a transação
                 int NSU = Integer.parseInt(transactionIDInput.getText().toString());
-
-                configuration.setPromptPinpad("Confirmando Transação NSU " + NSU);
 
                 Transaction transaction = loadTransaction(NSU);
 

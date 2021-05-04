@@ -76,5 +76,20 @@
       <option name="name" value="auttar" />
       <option name="url" value="file:/$PROJECT_DIR$/../../../../User%20Files/Downloads/POC%20Auttar%20Android/ctf-mobile-auttar/lib/PaymentSDKAuttar-2.12.1/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="auttar" />
+      <option name="name" value="auttar" />
+      <option name="url" value="file:/$PROJECT_DIR$/../../../../User%20Files/Downloads/POC%20Auttar%20Android/ctf-mobile-auttar/lib/PaymentSDKAuttar-2.14.3" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="auttar" />
+      <option name="name" value="auttar" />
+      <option name="url" value="file:/$PROJECT_DIR$/../../../../User%20Files/Downloads/POC%20Auttar%20Android/ctf-mobile-auttar/lib/PaymentSDKAuttar-2.14.3/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="auttar" />
+      <option name="name" value="auttar" />
+      <option name="url" value="file:/$PROJECT_DIR$/../../../../User%20Files/Downloads/POC%20Auttar%20Android/ctf-mobile-auttar/lib/PaymentSDKAuttar-2.12" />
+    </remote-repository>
   </component>
 </project>

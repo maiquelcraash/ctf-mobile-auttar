@@ -38,11 +38,13 @@ dependencies {
         maven {
             name = "auttar"
             url = "file://D:\\Dados\\User Files\\Downloads\\POC Auttar Android\\ctf-mobile-auttar\\lib\\PaymentSDKAuttar-2.12.1"
+//            url = "file://D:\\Dados\\User Files\\Downloads\\POC Auttar Android\\ctf-mobile-auttar\\lib\\PaymentSDKAuttar-2.14.3"
 //            url = "file://C:\\Users\\maiquel.ludwig\\Desktop\\WORK\\1- Projetos\\APP to PDV\\ctf-mobile-auttar\\lib\\PaymentSDKAuttar-2.12.0"
         }
     }
-//    implementation "br.com.auttar.mobile:payment-sdk-ctffastRelease:2.12.0"
+//    implementation "br.com.auttar.mobile:payment-sdk-ctffastRelease:2.12.1"
+//    implementation "br.com.auttar.mobile:payment-sdk-standaloneRelease:2.14.3"
     implementation "br.com.auttar.mobile:payment-sdk-standaloneRelease:2.12.1"
-//    implementation "br.com.auttar.mobile:payment-sdk-homologRelease:2.12.1"
+//    implementation "br.com.auttar.mobile:payment-sdk-homologRelease:2.12.0"
     implementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
 }
