@@ -66,8 +66,6 @@ public class MainActivity extends AppCompatActivity {
         String pinpad = configuration.getPinpadBluetooth();
         String prompt = configuration.getPromptPinpad();
 
-
-        super.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             TefResult tefResult = createTefResult(data);
@@ -87,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (NSUCTF > 0) {
-
                         try {
                             Transaction transaction = new Transaction(NSUCTF, requestCode, tefResult);
                             saveTransaction(transaction);
@@ -96,28 +93,11 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                        String Adquirente = tefResult.getAcquirer();
-                        String AditionalData = tefResult.getAdditionalData();
-                        BigDecimal amount = tefResult.getAmount();
-                        String approvalCode = tefResult.getApprovalCode();
-                        String authorizedCode = tefResult.getAuthorizerCode();
-                        String authorizer = tefResult.getAuthorizerName();
-                        String authorizationCode = tefResult.getAuttarAuthorizationCode();
-                        Long authorizerNSU = tefResult.getAuthorizerNsu();
-                        String brand = tefResult.getBrand();
-                        String cardNumber = tefResult.getCardNumber();
-                        String errorCode = tefResult.getErrorCode();
-                        String responseCode = tefResult.getResponseCode();
-                        String terminal = tefResult.getTerminal();
-                        String[] abbreviateCupom = tefResult.getAbbreviatedReceipt();
-                        String[] customerCupom = tefResult.getCustomerSalesReceipt();
-                        String[] storeCupom = tefResult.getStoreSalesReceipt();
-
                         alertDialog.setMessage(tefResult.getDisplay()[0] +
                                 "\nNSU: " + NSUCTF);
                         alertDialog.show();
 
-                        // Pagamento com 2 cartões
+//                         Pagamento com 2 cartões
                         if(splitTransaction) {
                             splitTransaction = false;
 
